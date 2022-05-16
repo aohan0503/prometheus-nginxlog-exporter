@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"regexp"
+	regexp "github.com/dlclark/regexp2"
 )
 
 // RelabelConfig is a struct describing a single re-labeling configuration for taking
@@ -39,8 +39,11 @@ func (c *RelabelConfig) Compile() error {
 
 	for i := range c.Matches {
 		if c.Matches[i].RegexpString != "" {
-			r, err := regexp.Compile(c.Matches[i].RegexpString)
+			fmt.Println("------------------")
+			fmt.Println(c.Matches[i].RegexpString)
+			r, err := regexp.Compile(c.Matches[i].RegexpString, 0)
 			if err != nil {
+				fmt.Println(err)
 				return fmt.Errorf("could not compile regexp '%s': %s", c.Matches[i].RegexpString, err.Error())
 			}
 

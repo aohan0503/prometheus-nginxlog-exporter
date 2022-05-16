@@ -1,6 +1,7 @@
 package relabeling
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -32,9 +33,13 @@ func (r *Relabeling) Map(sourceValue string) (string, error) {
 
 	if len(r.Matches) > 0 {
 		replacement := ""
+		var err error
 		for i := range r.Matches {
-			if r.Matches[i].CompiledRegexp.MatchString(sourceValue) {
-				replacement = r.Matches[i].CompiledRegexp.ReplaceAllString(sourceValue, r.Matches[i].Replacement)
+			if isMatch, _ := r.Matches[i].CompiledRegexp.MatchString(sourceValue); isMatch {
+				replacement, err = r.Matches[i].CompiledRegexp.Replace(sourceValue, r.Matches[i].Replacement, -1, -1)
+				if err != nil {
+					fmt.Println(err)
+				}
 				break
 			}
 		}
